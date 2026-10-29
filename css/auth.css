@@ -1,0 +1,465 @@
+/* =========================================================
+   auth.css — Tela de acesso, conta na barra lateral e
+   painel administrativo de usuários
+   Receitas BoardUI: auth-card, social-button (white),
+   divider (single com rótulo), avatar e badges.
+   ========================================================= */
+
+/* =========================================================
+   1. Tela de acesso (auth-card)
+   fundo secondary + cartão branco rounded-3xl shadow-xs
+   ========================================================= */
+
+.auth {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 32px 16px;
+  background: var(--color-background-secondary-default);
+}
+
+.auth__card {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  background: var(--color-background-primary-default);
+  border: 1px solid var(--color-border-button-default);
+  border-radius: var(--radius-3xl);
+  box-shadow: var(--shadow-xs);
+}
+
+.auth__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.auth__brand img {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  box-shadow: var(--shadow-xs);
+}
+
+.auth__brand h1 {
+  font-size: var(--text-title-2-semibold);
+  font-weight: var(--text-title-2-semibold--font-weight, 600);
+  letter-spacing: -0.01em;
+  color: var(--color-text-primary);
+}
+
+.auth__brand p {
+  margin-top: 2px;
+  font-size: var(--text-caption-1-regular);
+  line-height: var(--text-caption-1-regular--line-height);
+  color: var(--color-text-secondary);
+}
+
+/* Abas = segmented control do BoardUI (pílula ativa sobre trilho neutro) */
+
+.auth__tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 18px;
+  background: var(--color-background-secondary-default);
+  border-radius: var(--radius-2lg);
+}
+
+.auth__tab {
+  padding: 7px 10px;
+  border-radius: var(--radius-lg);
+  border: 1px solid transparent;
+  font-size: var(--text-body-medium);
+  font-weight: var(--text-body-medium--font-weight, 500);
+  line-height: var(--text-body-medium--line-height);
+  color: var(--color-text-secondary);
+  transition:
+    background-color var(--button-transition-ms) ease,
+    color var(--button-transition-ms) ease,
+    box-shadow var(--button-transition-ms) ease;
+}
+
+.auth__tab:hover {
+  color: var(--color-text-primary);
+}
+
+.auth__tab.is-active {
+  background: var(--color-background-primary-default);
+  border-color: var(--color-border-button-default);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-xs);
+}
+
+.auth__tab:focus-visible {
+  outline: 2px solid var(--color-border-focus-ring);
+  outline-offset: 1px;
+}
+
+/* Erros do formulário */
+
+.auth__error {
+  margin-bottom: 12px;
+  padding: 9px 12px;
+  border-radius: var(--radius-lg);
+  background: var(--color-background-tertiary-error);
+  color: var(--color-text-error-primary);
+  font-size: var(--text-body-2-regular);
+  line-height: var(--text-body-2-regular--line-height, 1.25rem);
+  font-weight: 500;
+}
+
+.btn--block {
+  width: 100%;
+}
+
+/* Divisor com rótulo (divider "single" do BoardUI) */
+
+.auth__divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 14px;
+}
+
+.auth__divider::before,
+.auth__divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--color-separator-border);
+}
+
+.auth__divider span {
+  flex-shrink: 0;
+  font-size: var(--text-body-medium);
+  font-weight: var(--text-body-medium--font-weight, 500);
+  line-height: var(--text-body-medium--line-height);
+  color: var(--color-text-secondary);
+}
+
+/* Botão social (aparência "white" do BoardUI) */
+
+.social-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: var(--radius-2lg);
+  background: var(--color-background-primary-default);
+  border: 1px solid var(--color-border-button-default);
+  box-shadow: var(--shadow-xs);
+  color: var(--color-text-primary);
+  font-size: var(--text-body-medium);
+  font-weight: var(--text-body-medium--font-weight, 500);
+  line-height: var(--text-body-medium--line-height);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--button-transition-ms) ease,
+    border-color var(--button-transition-ms) ease,
+    box-shadow var(--button-transition-ms) ease,
+    color var(--button-transition-ms) ease;
+}
+
+.social-btn:hover:not(:disabled) {
+  background: var(--color-background-primary-hover);
+  border-color: var(--color-border-button-hover);
+}
+
+.social-btn:active:not(:disabled) {
+  background: var(--color-background-primary-active);
+  border-color: var(--color-border-button-active);
+}
+
+.social-btn:focus-visible {
+  outline: 2px solid var(--color-border-focus-ring);
+  outline-offset: 2px;
+}
+
+.social-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.social-btn__icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* Espaço reservado para o botão oficial do Google (quando OAuth está ativo) */
+.social-slot {
+  display: flex;
+  justify-content: center;
+}
+
+.auth__note {
+  margin-top: 12px;
+  padding: 9px 12px;
+  border-radius: var(--radius-lg);
+  background: var(--color-notification-information-background);
+  color: var(--color-notification-information-foreground);
+  font-size: var(--text-caption-1-regular);
+  line-height: var(--text-caption-1-regular--line-height);
+}
+
+.auth__note code {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.95em;
+}
+
+.auth__footnote {
+  margin-top: 16px;
+  text-align: center;
+  max-width: 520px;
+  font-size: var(--text-caption-1-regular);
+  line-height: var(--text-caption-1-regular--line-height);
+  color: var(--color-text-tertiary);
+}
+
+/* =========================================================
+   2. Conta na barra lateral (avatar + papel)
+   ========================================================= */
+
+.sidebar__user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 12px 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border-button-default);
+  border-radius: var(--radius-xl);
+  background: var(--color-background-secondary-default);
+}
+
+.sidebar__avatar {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-full);
+  background: var(--color-accent-100);
+  color: var(--color-accent-700);
+  font-size: var(--text-caption-1-semibold);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.sidebar__userinfo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.sidebar__userinfo strong {
+  font-size: var(--text-body-2-medium);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar__userinfo small {
+  font-size: var(--text-caption-1-regular);
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================================================
+   3. Painel de gestão de usuários (modal largo)
+   ========================================================= */
+
+.modal--wide {
+  width: min(880px, calc(100vw - 32px));
+}
+
+.admin-create,
+.admin-list {
+  margin-bottom: 20px;
+}
+
+.admin-create h3,
+.admin-list h3 {
+  font-size: var(--text-headline-semibold);
+  font-weight: var(--text-headline-semibold--font-weight, 600);
+  color: var(--color-text-primary);
+  margin-bottom: 12px;
+}
+
+.admin-list__hint {
+  margin-bottom: 12px;
+  font-size: var(--text-body-2-regular);
+  color: var(--color-text-secondary);
+}
+
+.admin-users {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-user {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border-button-default);
+  border-radius: var(--radius-xl);
+  background: var(--color-background-primary-default);
+}
+
+.admin-user__avatar {
+  grid-row: span 2;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-full);
+  background: var(--color-background-tertiary-default);
+  color: var(--color-text-secondary);
+  font-size: var(--text-caption-1-semibold);
+  font-weight: 600;
+  align-self: start;
+}
+
+.admin-user__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.admin-user__name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: var(--text-body-medium);
+}
+
+.admin-user__name strong {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.admin-user__meta {
+  font-size: var(--text-caption-1-regular);
+  line-height: var(--text-caption-1-regular--line-height);
+  color: var(--color-text-tertiary);
+  overflow-wrap: anywhere;
+}
+
+.admin-user__actions {
+  grid-column: 3;
+  grid-row: 1;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.admin-user__actions .btn {
+  padding: 6px 10px;
+  font-size: var(--text-caption-1-medium);
+  font-weight: 600;
+  border-radius: var(--radius-lg);
+}
+
+.admin-user__actions .btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.admin-user__reset {
+  grid-column: 2 / -1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.admin-user__reset input {
+  flex: 1;
+  min-width: 180px;
+  padding: 8px 12px;
+  border-radius: var(--radius-2lg);
+  background: var(--color-background-tertiary-default);
+  border: none;
+  box-shadow: inset 0 0 0 2px transparent;
+  color: var(--color-text-primary);
+  font-size: var(--text-body-regular);
+  transition: box-shadow var(--input-transition-ms, 150ms) ease;
+}
+
+.admin-user__reset input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.admin-user__reset input:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--color-border-button-active);
+}
+
+.admin-user__reset .field__error {
+  flex-basis: 100%;
+}
+
+/* Ação destrutiva em fantasma (excluir conta, suspender) */
+
+.btn--danger-ghost {
+  background: var(--color-background-primary-default);
+  border-color: var(--color-border-button-default);
+  color: var(--color-text-error-primary);
+}
+
+.btn--danger-ghost:hover:not(:disabled) {
+  background: var(--color-background-tertiary-error);
+  border-color: var(--color-background-quaternary-error);
+  color: var(--color-foreground-icon-error);
+}
+
+/* =========================================================
+   4. Badges de conta (papel, status e provedor)
+   ========================================================= */
+
+.badge--role {
+  background: var(--color-accent-100);
+  color: var(--color-accent-700);
+}
+
+.badge--suspended {
+  background: var(--color-background-tertiary-error);
+  color: var(--color-text-error-primary);
+}
+
+.badge--google {
+  background: var(--color-status-blue-background);
+  color: var(--color-status-blue-text);
+}
+
+.badge--platform {
+  background: var(--color-status-orange-background);
+  color: var(--color-status-orange-text);
+}
+
+.badge--active {
+  background: var(--color-notification-success-background);
+  color: var(--color-notification-success-foreground);
+}

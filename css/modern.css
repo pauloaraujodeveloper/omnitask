@@ -1,0 +1,210 @@
+/* =========================================================
+   modern.css — Visual "tech" (camada final sobre o BoardUI)
+   Paleta violeta → ciano em OKLCH, vidro fosco, brilho sutil,
+   grade de fundo e tipografia monoespaçada para rótulos.
+   Usa tokens do theme-boardui.css; tema escuro via .dark
+   ========================================================= */
+
+:root {
+  color-scheme: light;
+  --tech-a: oklch(0.70 0.20 292);   /* violeta */
+  --tech-b: oklch(0.80 0.15 215);   /* ciano */
+  --tech-glow: oklch(0.70 0.20 292 / 0.35);
+  --tech-glass: oklch(1 0 0 / 0.55);
+  --tech-line: oklch(0 0 0 / 0.08);
+  --tech-grid: oklch(0 0 0 / 0.035);
+  --tech-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Menlo, Consolas, monospace;
+  --color-accent-500: var(--tech-a);
+  --color-accent-600: oklch(0.62 0.22 292);
+}
+
+.dark {
+  color-scheme: dark;
+  --tech-glass: oklch(0.22 0.02 280 / 0.55);
+  --tech-line: oklch(1 0 0 / 0.08);
+  --tech-grid: oklch(1 0 0 / 0.04);
+  --tech-glow: oklch(0.70 0.20 292 / 0.45);
+  --color-accent-500: var(--tech-a);
+  --color-accent-600: oklch(0.78 0.16 220);
+}
+
+::selection { background: oklch(0.70 0.20 292 / 0.35); }
+
+/* ---------- Fundo: grade + halos de luz ---------- */
+body {
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "cv11", "ss01";
+  background-color: var(--color-background-full, transparent);
+  background-image:
+    radial-gradient(60rem 40rem at 90% -10%, oklch(0.70 0.20 292 / 0.18), transparent 60%),
+    radial-gradient(50rem 36rem at -10% 110%, oklch(0.80 0.15 215 / 0.14), transparent 60%),
+    linear-gradient(var(--tech-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--tech-grid) 1px, transparent 1px);
+  background-size: auto, auto, 32px 32px, 32px 32px;
+  background-attachment: fixed;
+}
+
+/* Rótulos e métricas em monoespaçada, estilo console */
+.stat-card__label, .column__head, .section-head__sub, .topbar__date,
+.filters label, .filters__label, .task-card__meta, .badge {
+  font-family: var(--tech-mono);
+  letter-spacing: 0.04em;
+}
+.stat-card__value { font-family: var(--tech-mono); font-variant-numeric: tabular-nums; }
+
+/* ---------- Barra lateral em vidro ---------- */
+.sidebar {
+  background: var(--tech-glass);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border-right: 1px solid var(--tech-line);
+}
+.nav__item { border-radius: var(--radius-xl); transition: background-color 180ms ease, color 180ms ease, transform 180ms ease; }
+.nav__item:hover { transform: translateX(3px); }
+.nav__item.is-active {
+  background: linear-gradient(90deg, oklch(0.70 0.20 292 / 0.22), oklch(0.80 0.15 215 / 0.06));
+  box-shadow: inset 2px 0 0 var(--tech-a), 0 0 24px -8px var(--tech-glow);
+}
+.brand__name {
+  background: linear-gradient(90deg, var(--tech-a), var(--tech-b));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- Topbar ---------- */
+.topbar {
+  background: var(--tech-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--tech-line);
+}
+.search__input { border-radius: var(--radius-full); }
+.search__input:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--tech-a), 0 0 20px -4px var(--tech-glow);
+}
+
+/* ---------- Botões ---------- */
+.btn--primary {
+  background: linear-gradient(135deg, var(--tech-a), var(--tech-b));
+  border: 0;
+  box-shadow: 0 6px 20px -6px var(--tech-glow), inset 0 1px 0 oklch(1 0 0 / 0.25);
+  transition: transform 150ms ease, box-shadow 200ms ease, filter 150ms ease;
+}
+.btn--primary:hover { filter: brightness(1.08); box-shadow: 0 10px 28px -6px var(--tech-glow); transform: translateY(-1px); }
+.btn--primary:active { transform: translateY(0) scale(0.98); }
+
+/* ---------- Cartões de métrica ---------- */
+.stat-card, .progress-panel, .column, .filters, .planner {
+  background: var(--tech-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--tech-line);
+  border-radius: var(--radius-3xl);
+}
+.stat-card { position: relative; overflow: hidden; transition: transform 200ms ease, box-shadow 200ms ease; }
+.stat-card::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--tech-b), transparent);
+  opacity: 0.7;
+}
+.stat-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px -12px var(--tech-glow); }
+.stat-card--late::after { background: linear-gradient(90deg, transparent, oklch(0.65 0.22 25), transparent); }
+.stat-card--done::after { background: linear-gradient(90deg, transparent, oklch(0.75 0.18 150), transparent); }
+
+/* Barra de progresso com gradiente animado */
+.progress__fill {
+  background: linear-gradient(90deg, var(--tech-a), var(--tech-b), var(--tech-a));
+  background-size: 200% 100%;
+  box-shadow: 0 0 16px var(--tech-glow);
+  animation: flow 3s linear infinite;
+}
+@keyframes flow { to { background-position: -200% 0; } }
+
+/* ---------- Colunas do quadro ---------- */
+.column { padding: 0.5rem; transition: background-color 150ms ease, outline-color 150ms ease, box-shadow 200ms ease; }
+.column.is-over {
+  background: oklch(0.70 0.20 292 / 0.12);
+  outline-color: var(--tech-b);
+  box-shadow: 0 0 40px -10px var(--tech-glow);
+}
+
+/* ---------- Cartões de tarefa ---------- */
+.task-card {
+  border: 1px solid var(--tech-line);
+  border-radius: var(--radius-2xl);
+  background: color-mix(in oklab, var(--color-background-primary-default) 85%, transparent);
+  box-shadow: var(--shadow-card);
+  cursor: grab;
+  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 200ms ease, border-color 200ms ease, opacity 150ms ease;
+}
+.task-card:hover {
+  transform: translateY(-2px);
+  border-color: oklch(0.70 0.20 292 / 0.45);
+  box-shadow: 0 10px 30px -12px var(--tech-glow);
+}
+.task-card:active { cursor: grabbing; }
+.task-card.is-dragging { opacity: 0.45; transform: rotate(1.5deg) scale(0.98); box-shadow: 0 20px 40px -12px var(--tech-glow); }
+.task-card--alta { box-shadow: inset 3px 0 0 oklch(0.65 0.22 25), var(--shadow-card); }
+.task-card--alta:hover { box-shadow: inset 3px 0 0 oklch(0.65 0.22 25), 0 10px 30px -12px oklch(0.65 0.22 25 / 0.45); }
+.task-card--done { opacity: 0.7; }
+
+/* ---------- Toasts e diálogos ---------- */
+.toast, .modal, .confirm {
+  background: var(--tech-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--tech-line);
+  box-shadow: 0 30px 80px -20px var(--tech-glow);
+}
+.modal::backdrop, .confirm::backdrop {
+  background: oklch(0.12 0.03 280 / 0.6);
+  backdrop-filter: blur(4px);
+}
+
+/* Campos com foco luminoso */
+input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--tech-a), 0 0 20px -4px var(--tech-glow);
+}
+
+/* ---------- Scrollbar fina ---------- */
+* { scrollbar-width: thin; scrollbar-color: oklch(0.70 0.20 292 / 0.4) transparent; }
+
+/* ---------- Botão de tema ---------- */
+.theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--tech-line);
+  background: var(--tech-glass);
+  color: var(--color-foreground-icon-primary);
+  cursor: pointer;
+  transition: box-shadow 200ms ease, transform 120ms ease, border-color 200ms ease;
+}
+.theme-toggle:hover { border-color: oklch(0.70 0.20 292 / 0.5); box-shadow: 0 0 20px -4px var(--tech-glow); }
+.theme-toggle:active { transform: scale(0.94); }
+.theme-toggle:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--tech-a); }
+.theme-toggle svg { width: 18px; height: 18px; display: none; }
+.theme-toggle[data-mode="auto"] .icon-auto { display: block; }
+.theme-toggle[data-mode="light"] .icon-sun { display: block; }
+.theme-toggle[data-mode="dark"] .icon-moon { display: block; }
+
+/* ---------- Movimento reduzido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .task-card:hover, .stat-card:hover, .nav__item:hover, .btn--primary:hover { transform: none; }
+}
+
+/* Toque: sem arrastar nativo; mantém o botão de avançar */
+@media (hover: none) {
+  .task-card { cursor: default; }
+  .task-card:hover, .stat-card:hover { transform: none; }
+}

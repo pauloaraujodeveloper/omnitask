@@ -1,0 +1,314 @@
+/* =========================================================
+   responsive.css — Media queries (desktop → mobile)
+   ========================================================= */
+
+/* ---------------- Telas médias (notebooks) ---------------- */
+
+@media (max-width: 1280px) {
+  .stats-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ---------------- Tablet / telas menores ---------------- */
+
+@media (max-width: 1024px) {
+  .content {
+    padding: 22px 20px 36px;
+  }
+
+  .topbar {
+    padding: 12px 20px;
+  }
+
+  .footer {
+    padding: 16px 20px;
+  }
+
+  .filters__actions {
+    margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .admin-user {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .admin-user__actions {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    justify-content: flex-start;
+  }
+}
+
+/* ---------------- Menu lateral retrátil ---------------- */
+
+@media (max-width: 900px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    box-shadow: none;
+    width: min(280px, 84vw);
+  }
+
+  .sidebar.is-open {
+    transform: translateX(0);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .sidebar__close {
+    display: inline-grid;
+    place-items: center;
+  }
+
+  .topbar__menu {
+    display: inline-grid;
+  }
+
+  .topbar__date {
+    display: none;
+  }
+
+  /* Quadro com rolagem horizontal */
+  .board {
+    grid-auto-flow: column;
+    grid-template-columns: none;
+    grid-auto-columns: minmax(272px, 1fr);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    padding-bottom: 10px;
+    scroll-snap-type: x proximity;
+  }
+
+  .column {
+    scroll-snap-align: start;
+  }
+}
+
+/* ---------------- Celulares ---------------- */
+
+@media (max-width: 640px) {
+  .content {
+    padding: 18px 14px 30px;
+  }
+
+  .topbar {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 14px;
+  }
+
+  .search {
+    order: 3;
+    flex: 1 1 100%;
+    max-width: none;
+  }
+
+  .topbar__info {
+    margin-left: auto;
+  }
+
+  .btn--primary#newTaskBtn span {
+    display: none;
+  }
+
+  .btn--primary#newTaskBtn {
+    width: 36px;
+    padding: 0;
+  }
+
+  .section-head h1 {
+    font-size: var(--text-title-3-semibold);
+    line-height: var(--text-title-3-semibold--line-height, 1.5rem);
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .stat-card {
+    padding: 13px 14px;
+  }
+
+  .stat-card__value {
+    font-size: var(--text-title-2-semibold);
+    line-height: var(--text-title-2-semibold--line-height, 1.75rem);
+  }
+
+  .filters {
+    padding: 13px 14px;
+    gap: 10px;
+  }
+
+  .filters__field {
+    flex: 1 1 calc(50% - 10px);
+    min-width: 130px;
+  }
+
+  /* Colunas empilhadas: sem rolagem horizontal */
+  .board {
+    grid-auto-flow: row;
+    grid-template-columns: 1fr;
+    grid-auto-columns: auto;
+    overflow-x: visible;
+    padding-bottom: 0;
+  }
+
+  .column {
+    min-height: 0;
+  }
+
+  .field-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .modal,
+  .modal--wide {
+    width: calc(100vw - 20px);
+    max-height: calc(100vh - 24px);
+  }
+
+  .modal__head,
+  .modal__body,
+  .modal__foot {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .modal__body {
+    max-height: 62vh;
+  }
+
+  .modal__foot {
+    position: sticky;
+    bottom: 0;
+  }
+
+  .modal__foot .btn {
+    flex: 1;
+  }
+
+  .toasts {
+    right: 12px;
+    left: 12px;
+    bottom: 12px;
+    max-width: none;
+  }
+
+  /* Tela de acesso */
+  .auth {
+    padding: 20px 12px;
+    align-items: start;
+  }
+
+  .auth__card {
+    padding: 20px;
+    border-radius: var(--radius-2xl);
+  }
+
+  /* Painel de usuários: linhas empilhadas */
+  .admin-user {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .admin-user__avatar {
+    grid-row: auto;
+  }
+
+  .admin-user__actions {
+    grid-column: auto;
+    justify-content: flex-start;
+  }
+
+  .admin-user__reset {
+    grid-column: auto;
+  }
+}
+
+/* ---------------- Celulares muito estreitos ---------------- */
+
+@media (max-width: 380px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filters__field {
+    flex: 1 1 100%;
+  }
+
+  .filters__actions {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+}
+
+/* ---------------- Impressão ---------------- */
+
+@media print {
+  .sidebar,
+  .topbar,
+  .filters,
+  .task-card__footer,
+  .toasts,
+  .footer {
+    display: none !important;
+  }
+
+  body {
+    background: var(--color-background-primary-default);
+  }
+
+  .board {
+    grid-template-columns: repeat(3, 1fr);
+    overflow: visible;
+  }
+}
+
+/* =========================================================
+   Recursos v1.2 � planejador, alternador de vista e menu
+   ========================================================= */
+
+@media (max-width: 1024px) {
+  .planner__cell { min-height: 78px; }
+}
+
+@media (max-width: 900px) {
+  .planner__cell { min-height: 64px; }
+  .planner__day { min-height: 110px; }
+  /* Na semana, os dias rolam horizontalmente em telas estreitas. */
+  .planner__week {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(130px, 1fr);
+    overflow-x: auto;
+    padding-bottom: 6px;
+  }
+}
+
+@media (max-width: 640px) {
+  .section-head { flex-direction: column; align-items: flex-start; }
+  .planner { padding: 12px; }
+  .planner__title { min-width: 0; font-size: 0.95rem; }
+  .planner__cell { min-height: 50px; padding: 4px; gap: 3px; }
+  .planner__chip { font-size: 0.64rem; padding: 2px 4px; }
+  .planner__more { font-size: 0.6rem; }
+  .planner__weekdays span { font-size: 0.58rem; }
+  .view-switch__btn { padding: 6px 10px; }
+  .view-switch__btn span { font-size: 0.8rem; }
+  .menu { min-width: 170px; }
+}
+
+@media (max-width: 380px) {
+  .planner__cell { min-height: 42px; }
+  .planner__chip { display: none; }
+  .planner__cell--today .planner__chip,
+  .planner__cell .planner__more { display: block; }
+}

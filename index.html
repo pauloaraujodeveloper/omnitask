@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description"
+    content="OmniTask — gerenciador de tarefas pessoais e profissionais com quadro visual por status, prioridades, categorias, prazos, filtros e indicadores de produtividade.">
+  <meta name="color-scheme" content="light dark">
+  <title>OmniTask — Gerenciador de Tarefas</title>
+  <link rel="icon" type="image/png" href="assets/icons/favicon.png">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/theme-boardui.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/modern.css">
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Pular para o conteúdo principal</a>
+
+  <!-- ============ TELA DE LOGIN / CADASTRO ============ -->
+  <div class="auth" id="authView">
+    <section class="auth__card" aria-labelledby="authTitle">
+      <header class="auth__brand">
+        <img src="assets/images/omnitask-emblem.png" alt="" width="52" height="52" decoding="async">
+        <div>
+          <h1 id="authTitle">OmniTask</h1>
+          <p>Organize suas tarefas com quadro visual, prazos e indicadores.</p>
+        </div>
+      </header>
+
+      <div class="auth__tabs" role="tablist" aria-label="Entrar ou criar conta">
+        <button class="auth__tab is-active" id="tabSignIn" type="button" role="tab" aria-selected="true"
+          aria-controls="authForm">Entrar</button>
+        <button class="auth__tab" id="tabSignUp" type="button" role="tab" aria-selected="false"
+          aria-controls="authForm">Criar conta</button>
+      </div>
+
+      <form class="auth__form" id="authForm" novalidate>
+        <div class="field" id="authNameField" hidden>
+          <label for="authName">Nome <span class="req" aria-hidden="true">*</span></label>
+          <input id="authName" name="name" type="text" maxlength="60" autocomplete="name" placeholder="Seu nome"
+            aria-describedby="authNameError">
+          <p class="field__error" id="authNameError" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="authEmail">E-mail <span class="req" aria-hidden="true">*</span></label>
+          <input id="authEmail" name="email" type="email" maxlength="120" required autocomplete="email"
+            placeholder="voce@exemplo.com" aria-describedby="authEmailError">
+          <p class="field__error" id="authEmailError" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="authPassword">Senha <span class="req" aria-hidden="true">*</span></label>
+          <input id="authPassword" name="password" type="password" maxlength="72" required
+            autocomplete="current-password" placeholder="••••••••"
+            aria-describedby="authPasswordHint authPasswordError">
+          <div class="field__foot">
+            <span class="field__hint" id="authPasswordHint">Mínimo de 6 caracteres.</span>
+          </div>
+          <p class="field__error" id="authPasswordError" role="alert"></p>
+        </div>
+
+        <div class="field" id="authConfirmField" hidden>
+          <label for="authConfirm">Confirmar senha <span class="req" aria-hidden="true">*</span></label>
+          <input id="authConfirm" name="confirm" type="password" maxlength="72" autocomplete="new-password"
+            placeholder="••••••••" aria-describedby="authConfirmError">
+          <p class="field__error" id="authConfirmError" role="alert"></p>
+        </div>
+
+        <p class="auth__error" id="authFormError" role="alert" hidden></p>
+
+        <button class="btn btn--primary btn--block" id="authSubmit" type="submit">Entrar</button>
+      </form>
+
+      <div class="auth__divider" role="separator"><span>ou continue com</span></div>
+
+      <button class="social-btn" id="googleBtn" type="button">
+        <svg class="social-btn__icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path fill="#4285F4"
+            d="M23.49 12.27c0-.79-.07-1.54-.2-2.27H12v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z" />
+          <path fill="#34A853"
+            d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.29v3.09C3.26 21.3 7.31 24 12 24z" />
+          <path fill="#FBBC05"
+            d="M5.27 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.98-3.09z" />
+          <path fill="#EA4335"
+            d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.98 3.09C6.22 6.86 8.87 4.75 12 4.75z" />
+        </svg>
+        <span>Continuar com Google</span>
+      </button>
+
+      <p class="auth__note" id="authGoogleNote" hidden>
+        Login real do Google será ativado ao informar <code>GOOGLE_CLIENT_ID</code> em
+        <code>js/config.js</code>. Por enquanto é uma simulação de demonstração.
+      </p>
+
+      <p class="auth__footnote">
+        Ambiente de demonstração: as contas ficam salvas apenas neste navegador.
+      </p>
+    </section>
+  </div>
+
+  <div class="app" id="app" hidden>
+
+    <!-- ============ A. MENU LATERAL ============ -->
+    <aside class="sidebar" id="sidebar" aria-label="Navegação principal">
+      <div class="sidebar__brand">
+        <button class="brand__logo" id="brandLogo" type="button" aria-label="Girar o logo do OmniTask"
+          title="Clique para girar o logo">
+          <span class="brand__logo-inner" id="brandLogoInner" aria-hidden="true">
+            <img src="assets/images/omnitask-emblem.png" alt="" width="46" height="46" decoding="async">
+          </span>
+        </button>
+        <span class="brand__name">OmniTask<span class="brand__sub">Platform</span></span>
+        <button class="sidebar__close" id="sidebarClose" type="button" aria-label="Fechar menu">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <nav class="sidebar__nav">
+        <p class="nav__label">Menu</p>
+        <ul>
+          <li>
+            <button class="nav__item is-active" type="button" data-nav="overview">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="7" height="9" />
+                <rect x="14" y="3" width="7" height="5" />
+                <rect x="14" y="12" width="7" height="9" />
+                <rect x="3" y="16" width="7" height="5" />
+              </svg>
+              <span>Visão geral</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav__item" type="button" data-nav="all">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
+              </svg>
+              <span>Minhas tarefas</span>
+              <span class="nav__count" id="navCountAll">0</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav__item" type="button" data-nav="todo">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 7v5l3 2" />
+              </svg>
+              <span>A fazer</span>
+              <span class="nav__count" id="navCountTodo">0</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav__item" type="button" data-nav="in_progress">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 3a9 9 0 1 0 9 9" />
+                <path d="M12 3v6l4 2" />
+              </svg>
+              <span>Em andamento</span>
+              <span class="nav__count" id="navCountDoing">0</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav__item" type="button" data-nav="done">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 6L9 17l-5-5" />
+              </svg>
+              <span>Concluídas</span>
+              <span class="nav__count" id="navCountDone">0</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav__item" type="button" data-nav="categories">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path
+                  d="M20.6 13.4L12 4.8A2 2 0 0 0 10.6 4H5a2 2 0 0 0-2 2v5.6a2 2 0 0 0 .6 1.4l8.6 8.6a2 2 0 0 0 2.8 0l5.6-5.6a2 2 0 0 0 0-2.6z" />
+                <circle cx="7.5" cy="7.5" r="1.2" />
+              </svg>
+              <span>Categorias</span>
+            </button>
+          </li>
+          <li id="navUsersItem" hidden>
+            <button class="nav__item" type="button" data-nav="users">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              <span>Usuários</span>
+              <span class="nav__count" id="navCountUsers">0</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar__user" id="sidebarUser">
+        <span class="sidebar__avatar" id="userAvatar" aria-hidden="true">?</span>
+        <span class="sidebar__userinfo">
+          <strong id="userName">—</strong>
+          <small id="userEmail">—</small>
+        </span>
+        <span class="badge badge--role" id="userRole" hidden>admin</span>
+      </div>
+
+      <div class="sidebar__footer">
+        <fieldset class="controls">
+          <legend class="visually-hidden">Animações do logo</legend>
+          <button id="rotateLogoBtn" type="button">giros: <span id="rotationCount">0</span></button>
+        </fieldset>
+        <button class="btn btn--ghost btn--block btn--sm" id="logoutBtn" type="button">Sair da conta</button>
+        <p>OmniTask v1.2 · Anime.js</p>
+        <p>Dados salvos apenas neste navegador.</p>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay" hidden></div>
+
+    <!-- ============ ÁREA PRINCIPAL ============ -->
+    <div class="main-wrap">
+
+      <!-- B. CABEÇALHO -->
+      <header class="topbar">
+        <button class="icon-btn topbar__menu" id="sidebarOpen" type="button" aria-label="Abrir menu de navegação"
+          aria-controls="sidebar" aria-expanded="false">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round">
+            <path d="M3 6h18M3 12h18M3 18h18" />
+          </svg>
+        </button>
+
+        <div class="search">
+          <label class="visually-hidden" for="searchInput">Pesquisar tarefas por título ou descrição</label>
+          <svg class="search__icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" />
+            <path d="M21 21l-4.3-4.3" />
+          </svg>
+          <input class="search__input" id="searchInput" type="search" placeholder="Pesquisar por título ou descrição…"
+            autocomplete="off">
+          <button class="search__clear" id="searchClear" type="button" aria-label="Limpar pesquisa" hidden>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="topbar__info" aria-live="polite">
+          <span class="topbar__date" id="todayLabel"></span>
+        </div>
+
+        <button class="btn btn--primary" id="newTaskBtn" type="button">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" aria-hidden="true">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          <span>Nova tarefa</span>
+        </button>
+      </header>
+
+      <main class="content" id="main" tabindex="-1">
+
+        <div class="storage-warning" id="storageWarning" hidden role="alert">
+          O armazenamento local (<code>localStorage</code>) não está disponível neste navegador. Suas tarefas serão
+          mantidas apenas enquanto esta aba permanecer aberta.
+        </div>
+
+        <!-- C. DASHBOARD -->
+        <section class="dashboard" aria-labelledby="dashboardTitle">
+          <div class="section-head">
+            <h1 id="dashboardTitle">Visão geral</h1>
+            <p class="section-head__sub" id="dashboardSubtitle">Acompanhe sua produtividade.</p>
+          </div>
+
+          <div class="stats-grid">
+            <article class="stat-card">
+              <span class="stat-card__label">Total de tarefas</span>
+              <strong class="stat-card__value" id="statTotal">0</strong>
+            </article>
+            <article class="stat-card stat-card--todo">
+              <span class="stat-card__label">A fazer</span>
+              <strong class="stat-card__value" id="statTodo">0</strong>
+            </article>
+            <article class="stat-card stat-card--doing">
+              <span class="stat-card__label">Em andamento</span>
+              <strong class="stat-card__value" id="statDoing">0</strong>
+            </article>
+            <article class="stat-card stat-card--done">
+              <span class="stat-card__label">Concluídas</span>
+              <strong class="stat-card__value" id="statDone">0</strong>
+            </article>
+            <article class="stat-card stat-card--late">
+              <span class="stat-card__label">Atrasadas</span>
+              <strong class="stat-card__value" id="statLate">0</strong>
+            </article>
+            <article class="stat-card stat-card--percent">
+              <span class="stat-card__label">Percentual de conclusão</span>
+              <strong class="stat-card__value" id="statPercent">0%</strong>
+            </article>
+          </div>
+
+          <div class="progress-panel">
+            <div class="progress-panel__text">
+              <span>Progresso geral</span>
+              <strong id="progressLabel">0% concluído</strong>
+            </div>
+            <div class="progress" role="img" id="progressBar" aria-label="0% das tarefas concluídas">
+              <span class="progress__fill" id="progressFill" style="width:0%"></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- D. ÁREA DE TAREFAS -->
+        <section class="tasks-area" aria-labelledby="boardTitle">
+          <div class="section-head">
+            <h2 id="boardTitle">Quadro de tarefas</h2>
+            <div class="view-switch" role="group" aria-label="Modo de visualização das tarefas">
+              <button class="view-switch__btn is-active" id="viewBoardBtn" type="button" aria-pressed="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="6" height="16" rx="1.5"/><rect x="10.5" y="4" width="6" height="11" rx="1.5"/><rect x="18" y="4" width="3" height="7" rx="1"/></svg>
+                <span>Quadro</span>
+              </button>
+              <button class="view-switch__btn" id="viewPlannerBtn" type="button" aria-pressed="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>
+                <span>Planejador</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Filtros -->
+          <form class="filters" id="filtersForm" aria-label="Filtros de tarefas">
+            <div class="filters__field">
+              <label for="filterStatus">Status</label>
+              <select id="filterStatus">
+                <option value="">Todos</option>
+                <option value="todo">A fazer</option>
+                <option value="in_progress">Em andamento</option>
+                <option value="done">Concluídas</option>
+              </select>
+            </div>
+            <div class="filters__field">
+              <label for="filterPriority">Prioridade</label>
+              <select id="filterPriority">
+                <option value="">Todas</option>
+                <option value="alta">Alta</option>
+                <option value="media">Média</option>
+                <option value="baixa">Baixa</option>
+              </select>
+            </div>
+            <div class="filters__field">
+              <label for="filterCategory">Categoria</label>
+              <select id="filterCategory">
+                <option value="">Todas</option>
+                <option value="trabalho">Trabalho</option>
+                <option value="estudos">Estudos</option>
+                <option value="pessoal">Pessoal</option>
+                <option value="saude">Saúde</option>
+                <option value="financas">Finanças</option>
+                <option value="outros">Outros</option>
+              </select>
+            </div>
+            <div class="filters__field">
+              <label for="filterDue">Prazo</label>
+              <select id="filterDue">
+                <option value="">Qualquer</option>
+                <option value="overdue">Atrasadas</option>
+                <option value="with_due">Com prazo</option>
+                <option value="no_due">Sem prazo</option>
+                <option value="today">Vencem hoje</option>
+                <option value="week">Próximos 7 dias</option>
+              </select>
+            </div>
+            <div class="filters__field">
+              <label for="filterSort">Ordenar por</label>
+              <select id="filterSort">
+                <option value="due" selected>Prazo (padrão)</option>
+                <option value="priority">Prioridade</option>
+                <option value="title">Título (A–Z)</option>
+                <option value="created">Mais recentes</option>
+                <option value="updated">Última edição</option>
+              </select>
+            </div>
+            <div class="filters__actions">
+              <button class="btn btn--ghost" id="clearFiltersBtn" type="button">Limpar filtros</button>
+              <p class="filters__result" id="filtersResult" aria-live="polite">0 tarefas exibidas</p>
+            </div>
+          </form>
+
+          <!-- Quadro com três colunas -->
+          <div class="board" id="board">
+            <section class="column" data-status="todo" aria-labelledby="colTodoTitle">
+              <header class="column__head">
+                <span class="column__dot column__dot--todo" aria-hidden="true"></span>
+                <h3 id="colTodoTitle">A fazer</h3>
+                <span class="column__count" id="colCountTodo">0</span>
+              </header>
+              <div class="column__body" id="colTodo" role="list"></div>
+            </section>
+
+            <section class="column" data-status="in_progress" aria-labelledby="colDoingTitle">
+              <header class="column__head">
+                <span class="column__dot column__dot--doing" aria-hidden="true"></span>
+                <h3 id="colDoingTitle">Em andamento</h3>
+                <span class="column__count" id="colCountDoing">0</span>
+              </header>
+              <div class="column__body" id="colDoing" role="list"></div>
+            </section>
+
+            <section class="column" data-status="done" aria-labelledby="colDoneTitle">
+              <header class="column__head">
+                <span class="column__dot column__dot--done" aria-hidden="true"></span>
+                <h3 id="colDoneTitle">Concluídas</h3>
+                <span class="column__count" id="colCountDone">0</span>
+              </header>
+              <div class="column__body" id="colDone" role="list"></div>
+            </section>
+          </div>
+
+          <!-- Planejador de prazos (visão mensal ou semanal) -->
+          <section class="planner" id="planner" hidden aria-labelledby="plannerTitle">
+            <header class="planner__head">
+              <div class="planner__nav">
+                <button class="icon-btn" id="plannerPrev" type="button" aria-label="Período anterior">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+                <h3 class="planner__title" id="plannerTitle">—</h3>
+                <button class="icon-btn" id="plannerNext" type="button" aria-label="Próximo período">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+                <button class="btn btn--ghost btn--sm" id="plannerToday" type="button">Hoje</button>
+              </div>
+              <div class="view-switch view-switch--sm" role="group" aria-label="Intervalo do planejador">
+                <button class="view-switch__btn is-active" id="plannerModeMonth" type="button" aria-pressed="true">Mês</button>
+                <button class="view-switch__btn" id="plannerModeWeek" type="button" aria-pressed="false">Semana</button>
+              </div>
+            </header>
+            <div class="planner__body" id="plannerBody"></div>
+          </section>
+
+          <div class="empty-state" id="emptyState" hidden>
+            <svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.6"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="17" rx="3" />
+              <path d="M8 2v4M16 2v4M3 10h18M9 15l2 2 4-4" />
+            </svg>
+            <h3 id="emptyStateTitle">Nenhuma tarefa por aqui</h3>
+            <p id="emptyStateText">Crie sua primeira tarefa e comece a organizar seu dia.</p>
+            <button class="btn btn--primary" id="emptyStateBtn" type="button">Criar primeira tarefa</button>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p>OmniTask — projeto de portfólio · HTML5, CSS3 e JavaScript · dados salvos via <code>localStorage</code>.</p>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: FORMULÁRIO DE TAREFA ============ -->
+  <dialog class="modal" id="taskDialog" aria-labelledby="taskDialogTitle">
+    <form id="taskForm" novalidate>
+      <header class="modal__head">
+        <h2 id="taskDialogTitle">Nova tarefa</h2>
+        <button class="icon-btn" id="modalClose" type="button" aria-label="Fechar formulário">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </header>
+
+      <div class="modal__body">
+        <div class="field">
+          <label for="taskTitle">Título <span class="req" aria-hidden="true">*</span></label>
+          <input id="taskTitle" name="title" type="text" maxlength="100" required
+            aria-describedby="taskTitleHint taskTitleError" placeholder="Ex.: Estudar JavaScript">
+          <div class="field__foot">
+            <span class="field__hint" id="taskTitleHint">Entre 3 e 100 caracteres.</span>
+            <span class="field__counter" id="taskTitleCounter">0/100</span>
+          </div>
+          <p class="field__error" id="taskTitleError" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="taskDescription">Descrição <span class="optional">(opcional)</span></label>
+          <textarea id="taskDescription" name="description" rows="3" maxlength="500"
+            aria-describedby="taskDescriptionCounter" placeholder="Detalhes, links ou observações…"></textarea>
+          <div class="field__foot">
+            <span class="field__hint">Até 500 caracteres.</span>
+            <span class="field__counter" id="taskDescriptionCounter">0/500</span>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="taskPriority">Prioridade <span class="req" aria-hidden="true">*</span></label>
+            <select id="taskPriority" name="priority" required>
+              <option value="alta">Alta</option>
+              <option value="media" selected>Média</option>
+              <option value="baixa">Baixa</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="taskCategory">Categoria <span class="req" aria-hidden="true">*</span></label>
+            <select id="taskCategory" name="category" required>
+              <option value="trabalho">Trabalho</option>
+              <option value="estudos">Estudos</option>
+              <option value="pessoal">Pessoal</option>
+              <option value="saude">Saúde</option>
+              <option value="financas">Finanças</option>
+              <option value="outros" selected>Outros</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="taskDueDate">Prazo <span class="optional">(opcional)</span></label>
+            <input id="taskDueDate" name="dueDate" type="date">
+          </div>
+          <div class="field">
+            <label for="taskStatus">Status <span class="req" aria-hidden="true">*</span></label>
+            <select id="taskStatus" name="status" required>
+              <option value="todo" selected>A fazer</option>
+              <option value="in_progress">Em andamento</option>
+              <option value="done">Concluída</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <footer class="modal__foot">
+        <button class="btn btn--ghost" id="taskCancel" type="button">Cancelar</button>
+        <button class="btn btn--primary" id="taskSubmit" type="submit">Salvar tarefa</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- ============ MODAL: CONFIRMAÇÃO ============ -->
+  <dialog class="confirm" id="confirmDialog" aria-labelledby="confirmTitle" aria-describedby="confirmText">
+    <h2 id="confirmTitle">Excluir tarefa?</h2>
+    <p id="confirmText">Esta ação não poderá ser desfeita.</p>
+    <div class="confirm__foot">
+      <button class="btn btn--ghost" id="confirmCancel" type="button">Cancelar</button>
+      <button class="btn btn--danger" id="confirmOk" type="button">Excluir</button>
+    </div>
+  </dialog>
+
+  <!-- ============ MODAL: GESTÃO DE USUÁRIOS (ADMIN) ============ -->
+  <dialog class="modal modal--wide" id="usersDialog" aria-labelledby="usersDialogTitle">
+    <header class="modal__head">
+      <h2 id="usersDialogTitle">Gerenciar usuários</h2>
+      <button class="icon-btn" id="usersClose" type="button" aria-label="Fechar gestão de usuários">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round">
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </button>
+    </header>
+
+    <div class="modal__body">
+      <section class="admin-create" aria-labelledby="adminCreateTitle">
+        <h3 id="adminCreateTitle">Criar acesso</h3>
+        <form id="adminCreateForm" novalidate>
+          <div class="field-row">
+            <div class="field">
+              <label for="adminNewName">Nome <span class="req" aria-hidden="true">*</span></label>
+              <input id="adminNewName" type="text" maxlength="60" autocomplete="off" placeholder="Nome do usuário">
+            </div>
+            <div class="field">
+              <label for="adminNewEmail">E-mail <span class="req" aria-hidden="true">*</span></label>
+              <input id="adminNewEmail" type="email" maxlength="120" autocomplete="off"
+                placeholder="usuario@exemplo.com">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="adminNewPassword">Senha <span class="req" aria-hidden="true">*</span></label>
+              <input id="adminNewPassword" type="password" maxlength="72" autocomplete="new-password"
+                placeholder="Mínimo de 6 caracteres">
+            </div>
+            <div class="field">
+              <label for="adminNewRole">Papel</label>
+              <select id="adminNewRole">
+                <option value="user" selected>Usuário</option>
+                <option value="admin">Administrador</option>
+              </select>
+            </div>
+          </div>
+          <p class="field__error" id="adminCreateError" role="alert"></p>
+          <button class="btn btn--primary" type="submit">Criar acesso</button>
+        </form>
+      </section>
+
+      <section class="admin-list" aria-labelledby="adminListTitle">
+        <h3 id="adminListTitle">Contas cadastradas</h3>
+        <p class="admin-list__hint" id="adminListHint"></p>
+        <ul class="admin-users" id="adminUsersList"></ul>
+      </section>
+    </div>
+
+    <footer class="modal__foot">
+      <button class="btn btn--ghost" id="usersDone" type="button">Fechar</button>
+    </footer>
+  </dialog>
+
+  <!-- Notificações -->
+  <div class="toasts" id="toasts"></div>
+
+  <script src="assets/js/anime.umd.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/tasks.js"></script>
+  <script src="js/filters.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/modern.js"></script>
+  <script src="js/planner.js"></script>
+</body>
+
+</html>
